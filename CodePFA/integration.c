@@ -3,19 +3,27 @@
 #include "integration.h"
 
 char valid[7][] = {"left", "right", "middle", "trapezes", "simpson", "gauss2", "gauss3"};
+QuadFormula dict[7] = {{"left",1,{1,0},{0,0}},
+						{"right",1,{1,0},{1,0}},
+						{"middle",1,{1,0},{0.5,0}},
+						{"trapezes",2,{0.5,0},{0.5,1}}
+						};
 
-bool is_valid(char* name){
+int is_valid(char* name){
 	for(int i = 0; i < 7; i++){
 		if(strcmp(valid[i],name)){
-			return true;
+			return i;
 		}
 	}
-	return false;
+	return -1;
 }
 
 bool setQuadFormula(QuadFormula* qf, char* name){
-	if(!is_valid(name)) return false;
-	qf->name=strdup(name);
+	int ind = is_valid(name);
+	if(ind<0) return false;
+
+	memcpy(dict+ind,qf,sizeof(QuadFormula));
+	
 	return true;
 }
 

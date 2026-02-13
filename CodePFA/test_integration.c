@@ -7,7 +7,7 @@
 
 /* Code here everything you need to test the integration methods and show your numericzal results */
 
-int main()
-{
-  return 0;
+int main(){
+	
+ 	return 0;
 }

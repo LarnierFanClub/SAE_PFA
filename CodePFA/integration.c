@@ -34,6 +34,16 @@ void printQuadFormula(QuadFormula* qf)
   /* Print everything else that may be useful */
 }
 
+double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
+	int n = qf->n;
+	double w[2] = qf->w;
+	double x[2] = qf->x;
+	double res = 0;
+	for(int i = 0; i < n; i++){
+		res+=w[i]*f(ai+x[i]*(bi-ai));	
+	}
+	return res;
+}
 
 /* Approximate the integral of function f from a to b.
    - f is a pointer to a function pointer
@@ -42,7 +52,10 @@ void printQuadFormula(QuadFormula* qf)
    - Integral of f on each subdivision [ai,bi] is approximated by the quadrature formula qf.
 */
 double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf){
-	
+	double range = (b-a)/N;
+	for(int i = 0; i < n; i++){
+		
+	}
 }
 
 double integrate_dx(double (*f)(double), double a, double b, double dx, QuadFormula* qf)

@@ -4,3 +4,5 @@
 !README
 !Makefile
 *.swp
+
+*.o

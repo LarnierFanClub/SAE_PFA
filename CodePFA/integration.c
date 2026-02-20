@@ -2,7 +2,7 @@
 
 #include "integration.h"
 
-char valid[7][] = {"left", "right", "middle", "trapezes", "simpson", "gauss2", "gauss3"};
+char* valid[7] = {"left", "right", "middle", "trapezes", "simpson", "gauss2", "gauss3"};
 QuadFormula dict[7] = {{"left",1,{1,0},{0,0}},
 						{"right",1,{1,0},{1,0}},
 						{"middle",1,{1,0},{0.5,0}},
@@ -11,7 +11,7 @@ QuadFormula dict[7] = {{"left",1,{1,0},{0,0}},
 
 int is_valid(char* name){
 	for(int i = 0; i < 7; i++){
-		if(strcmp(valid[i],name)){
+		if(!strcmp(valid[i],name)){
 			return i;
 		}
 	}
@@ -20,9 +20,11 @@ int is_valid(char* name){
 
 bool setQuadFormula(QuadFormula* qf, char* name){
 	int ind = is_valid(name);
+	
 	if(ind<0) return false;
 
-	memcpy(dict+ind,qf,sizeof(QuadFormula));
+	//memcpy(dict+ind,qf,sizeof(QuadFormula));
+	memcpy(qf,dict+ind,sizeof(QuadFormula));
 	
 	return true;
 }
@@ -30,22 +32,22 @@ bool setQuadFormula(QuadFormula* qf, char* name){
 /* This function is not required ,but it may useful to debug */
 void printQuadFormula(QuadFormula* qf)
 {
-  	printf("Quadratic formula: %s\n", qf->name);
+  	printf("Quadratic formula : %s\n", qf->name);
   	printf("size : %d\n",qf->n);
-	printf("w list: %d",qf->w[0]);
+	printf("w list: %f",qf->w[0]);
 	if(qf->n >= 2)
-		printf(", %d",qf->w[1]);
+		printf(", %f",qf->w[1]);
 	printf("\n");
-  	printf("x list: %d",qf->x[0]);
+  	printf("x list: %f",qf->x[0]);
 	if(qf->n >= 2)
-		printf(", %d",qf->x[1]);
+		printf(", %f",qf->x[1]);
 	printf("\n");
 }
 
 double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
 	int n = qf->n;
-	double w[2] = qf->w;
-	double x[2] = qf->x;
+	double* w = qf->w;
+	double* x = qf->x;
 	double res = 0;
 	for(int i = 0; i < n; i++){
 		res+=w[i]*f(ai+x[i]*(bi-ai));	

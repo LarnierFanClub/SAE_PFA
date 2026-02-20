@@ -18,13 +18,46 @@ int main(){
 	
 	printf("-------------------------------\n");
 	QuadFormula* qf = malloc(sizeof(QuadFormula));
-	
-	// left :
-	setQuadFormula(qf, "right");
-	printQuadFormula(qf);
 	int precision = 500;
 
-	printf("\n╔══════════════════════════════════════════════╗\n");
+	// left :
+	setQuadFormula(qf, "left");
+	printf("\n╔═════════════════════════╗\n\n");
+	printQuadFormula(qf);
+
+	printf("\n╠══════════════════════════════════════════════╗\n");
+	for (int N=1;(N< precision);N+=50){
+		if (N>1)printf("\n╠════╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌\n");
+		printf("║ Approximation avec \"%s\" de precision %d :\n║ >> %f",
+				qf->name,
+				N,
+				integrate(&fquelconque, 0, 5, N, qf));
+	}
+	printf("\n╚══════════════════════════════════════════════╝\n");
+ 	
+
+	// middle :
+	setQuadFormula(qf, "middle");
+	printf("\n╔═════════════════════════╗\n\n");
+	printQuadFormula(qf);
+
+	printf("\n╠══════════════════════════════════════════════╗\n");
+	for (int N=1;(N< precision);N+=50){
+		if (N>1)printf("\n╠════╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌\n");
+		printf("║ Approximation avec \"%s\" de precision %d :\n║ >> %f",
+				qf->name,
+				N,
+				integrate(&fquelconque, 0, 5, N, qf));
+	}
+	printf("\n╚══════════════════════════════════════════════╝\n");
+ 	
+
+	// right :
+	setQuadFormula(qf, "right");
+	printf("\n╔═════════════════════════╗\n\n");
+	printQuadFormula(qf);
+
+	printf("\n╠══════════════════════════════════════════════╗\n");
 	for (int N=1;(N< precision);N+=50){
 		if (N>1)printf("\n╠════╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌\n");
 		printf("║ Approximation avec \"%s\" de precision %d :\n║ >> %f",

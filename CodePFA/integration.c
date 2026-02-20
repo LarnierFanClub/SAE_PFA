@@ -50,9 +50,23 @@ double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
 	double* x = qf->x;
 	double res = 0;
 	for(int i = 0; i < n; i++){
-		res+=w[i]*f(ai+x[i]*(bi-ai));	
+		res+=w[i]*f(ai+(x[i]*(bi-ai)));
 	}
 	return res;
+}
+
+double get_simp_pol(double cur, double vals[],size_t n){
+	double a = 1;
+	double b = 1;
+	double c = 1;
+	for(size_t i = 0; i< n; i++){
+		if(vals[i] == cur) continue;
+		double denom = cur-vals[i];
+		a /= denom;
+		b = 0;
+		c *= cur/denom;
+	}
+	return a/3+b/2+c;
 }
 
 /* Approximate the integral of function f from a to b.
@@ -62,6 +76,7 @@ double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
    - Integral of f on each subdivision [ai,bi] is approximated by the quadrature formula qf.
 */
 double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf){
+	if(a==b || f == NULL || qf == NULL || qf->n == 0) return 0;
 	double range = (b-a)/N;
 	double bi = a + range;
 	double res = 0;

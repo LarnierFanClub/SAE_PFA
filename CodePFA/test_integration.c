@@ -24,7 +24,7 @@ int main(){
 	//bool r = setQuadFormula(qf, "left");
 	//printf("\nsqf return : %s\n\n",r ? "true" : "false");
 	printQuadFormula(qf);
-	printf("\nApproximation avec \"%s\" de precision %d :\n>> %d\n",qf->name,N,integrate(&fquelconque, 0, 5, N, qf));
+	printf("\nApproximation avec \"%s\" de precision %d :\n>> %f\n",qf->name,N,integrate(&fquelconque, 0, 5, N, qf));
  	free(qf);
 	return 0;
 }

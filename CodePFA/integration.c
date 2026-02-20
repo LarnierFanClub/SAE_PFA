@@ -30,8 +30,16 @@ bool setQuadFormula(QuadFormula* qf, char* name){
 /* This function is not required ,but it may useful to debug */
 void printQuadFormula(QuadFormula* qf)
 {
-  printf("Quadratic formula: %s\n", qf->name);
-  /* Print everything else that may be useful */
+  	printf("Quadratic formula: %s\n", qf->name);
+  	printf("size : %d\n",qf->n);
+	printf("w list: %d",qf->w[0]);
+	if(qf->n >= 2)
+		printf(", %d",qf->w[1]);
+	printf("\n");
+  	printf("x list: %d",qf->x[0]);
+	if(qf->n >= 2)
+		printf(", %d",qf->x[1]);
+	printf("\n");
 }
 
 double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
@@ -53,9 +61,14 @@ double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
 */
 double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf){
 	double range = (b-a)/N;
-	for(int i = 0; i < n; i++){
-		
+	double bi = a + range;
+	double res = 0;
+	for(int ai = a; ai < b; bi+=range){
+		if(bi > b) bi = b;
+		res = (bi-ai)*sum_integ(f,ai,bi,qf);
+		ai = bi;
 	}
+	return res;
 }
 
 double integrate_dx(double (*f)(double), double a, double b, double dx, QuadFormula* qf)

@@ -40,10 +40,14 @@ void printQuadFormula(QuadFormula* qf)
 	printf("w list: %f",qf->w[0]);
 	if(qf->n >= 2)
 		printf(", %f",qf->w[1]);
+	if(qf->n >= 3)
+		printf(", %f",qf->w[2]);
 	printf("\n");
   	printf("x list: %f",qf->x[0]);
 	if(qf->n >= 2)
 		printf(", %f",qf->x[1]);
+	if(qf->n >= 3)
+		printf(", %f",qf->w[2]);
 	printf("\n");
 }
 
@@ -67,10 +71,7 @@ double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
 */
 double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf){
 	if(a==b || f == NULL || qf == NULL || qf->n == 0) return 0;
-	char* name = qf->name;
-	double res = 0;
 	double range = (b-a)/N;
-<<<<<<< Updated upstream
 	double ai = a;
 	double bi = a;
 	double res = 0;
@@ -78,13 +79,6 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 		bi += range;
 		res += (bi-ai)*sum_integ(f,ai,bi,qf);
 		ai += range;
-=======
-	double bi = a + range;
-	for(int ai = a; ai < b; bi+=range){
-		if(bi > b) bi = b;
-		res = (bi-ai)*sum_integ(f,ai,bi,qf);
-		ai = bi;
->>>>>>> Stashed changes
 	}
 	return res;
 }

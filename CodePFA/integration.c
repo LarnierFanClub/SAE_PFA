@@ -78,12 +78,13 @@ double get_simp_pol(double cur, double vals[],size_t n){
 double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf){
 	if(a==b || f == NULL || qf == NULL || qf->n == 0) return 0;
 	double range = (b-a)/N;
-	double bi = a + range;
+	double ai = a;
+	double bi = a;
 	double res = 0;
-	for(int ai = a; ai < b; bi+=range){
-		if(bi > b) bi = b;
-		res = (bi-ai)*sum_integ(f,ai,bi,qf);
-		ai = bi;
+	for(;(N > 0); N--){
+		bi += range;
+		res += (bi-ai)*sum_integ(f,ai,bi,qf);
+		ai += range;
 	}
 	return res;
 }

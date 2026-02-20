@@ -6,7 +6,10 @@ char* valid[7] = {"left", "right", "middle", "trapezes", "simpson", "gauss2", "g
 QuadFormula dict[7] = {{"left",1,{1,0},{0,0}},
 						{"right",1,{1,0},{1,0}},
 						{"middle",1,{1,0},{0.5,0}},
-						{"trapezes",2,{0.5,0},{0.5,1}}
+						{"trapezes",2,{0.5,0},{0.5,1}},
+						{"simpson",3,{1/6,3/2,1/6},{0,0.5,1}},
+						{"gauss2",2,{0.5,0.5},{0.5*(1-1/sqrt(3)),0.5*(1+1/sqrt(3))}}},
+						{"gauss3",3,{5/18,4/9,5/18},{0.5*(1-sqrt(3/5)),0.5,0.5*(1+sqrt(3/5))}}
 						};
 
 int is_valid(char* name){
@@ -55,19 +58,6 @@ double sum_integ(double (*f)(double), double ai, double bi, QuadFormula* qf){
 	return res;
 }
 
-double get_simp_pol(double cur, double vals[],size_t n){
-	double a = 1;
-	double b = 1;
-	double c = 1;
-	for(size_t i = 0; i< n; i++){
-		if(vals[i] == cur) continue;
-		double denom = cur-vals[i];
-		a /= denom;
-		b = 0;
-		c *= cur/denom;
-	}
-	return a/3+b/2+c;
-}
 
 /* Approximate the integral of function f from a to b.
    - f is a pointer to a function pointer
@@ -77,7 +67,10 @@ double get_simp_pol(double cur, double vals[],size_t n){
 */
 double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf){
 	if(a==b || f == NULL || qf == NULL || qf->n == 0) return 0;
+	char* name = qf->name;
+	double res = 0;
 	double range = (b-a)/N;
+<<<<<<< Updated upstream
 	double ai = a;
 	double bi = a;
 	double res = 0;
@@ -85,6 +78,13 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 		bi += range;
 		res += (bi-ai)*sum_integ(f,ai,bi,qf);
 		ai += range;
+=======
+	double bi = a + range;
+	for(int ai = a; ai < b; bi+=range){
+		if(bi > b) bi = b;
+		res = (bi-ai)*sum_integ(f,ai,bi,qf);
+		ai = bi;
+>>>>>>> Stashed changes
 	}
 	return res;
 }

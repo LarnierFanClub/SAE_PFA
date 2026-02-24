@@ -27,6 +27,11 @@ typedef struct{
 
 } QuadFormula;
 
+#define SQRT3 0.5773502691896257
+#define SQRT35 0.7745966692414834
+
+extern char* valid[7];
+
 #ifdef INTEGRATION_C
 
 #else /* INTEGRATION_C */

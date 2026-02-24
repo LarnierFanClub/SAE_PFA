@@ -3,16 +3,17 @@
 #include "integration.h"
 
 char* valid[7] = {"left", "right", "middle", "trapezes", "simpson", "gauss2", "gauss3"};
-QuadFormula dict[7] = {{"left",1,{1,0},{0,0}},
+
+const QuadFormula dict[7] = {{"left",1,{1,0},{0,0}},
 						{"right",1,{1,0},{1,0}},
 						{"middle",1,{1,0},{0.5,0}},
-						{"trapezes",2,{0.5,0},{0.5,1}},
-						{"simpson",3,{1/6,3/2,1/6},{0,0.5,1}},
-						{"gauss2",2,{0.5,0.5},{0.5*(1-1/sqrt(3)),0.5*(1+1/sqrt(3))}}},
-						{"gauss3",3,{5/18,4/9,5/18},{0.5*(1-sqrt(3/5)),0.5,0.5*(1+sqrt(3/5))}}
+						{"trapezes",2,{0.5,0.5},{0.0,1}},
+						{"simpson",3,{1.0/6.0,2.0/3.0,1.0/6.0},{0.0,0.5,1.0}},
+						{"gauss2",2,{0.5,0.5},{0.5*(1.0-SQRT3),0.5*(1.0+SQRT3)}},
+						{"gauss3",3,{5.0/18.0,4.0/9.0,5.0/18.0},{0.5*(1.0-SQRT35),0.5,0.5*(1.0+SQRT35)}}
 						};
 
-int is_valid(char* name){
+int is_valid(const char* name){
 	for(int i = 0; i < 7; i++){
 		if(!strcmp(valid[i],name)){
 			return i;
@@ -21,7 +22,7 @@ int is_valid(char* name){
 	return -1;
 }
 
-bool setQuadFormula(QuadFormula* qf, char* name){
+bool setQuadFormula(QuadFormula* qf, const char* name){
 	int ind = is_valid(name);
 	
 	if(ind<0) return false;
@@ -85,7 +86,9 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 
 double integrate_dx(double (*f)(double), double a, double b, double dx, QuadFormula* qf)
 {
-  return 0.0;
+    int N = (int)round(fabs(b-a)/dx);
+    if(N <= 0) N = 1;
+    return integrate(f,a,b,N,qf);
 }
 
 

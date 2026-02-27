@@ -23,6 +23,7 @@ int is_valid(const char* name){
 }
 
 bool setQuadFormula(QuadFormula* qf, const char* name){
+    if(qf == NULL) return false;
 	int ind = is_valid(name);
 	
 	if(ind<0) return false;

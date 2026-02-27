@@ -8,7 +8,9 @@
 /* Code here anything you want to test your pfa functions and to show your numerical results */
 int main()
 {
-    init_integration("gauss3",0.075);
+	if(!init_integration("gauss3",0.08)){
+		printf("a error occured while initialised variable")
+	}
     
     return 0;
 }

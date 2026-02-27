@@ -47,7 +47,7 @@ double optionPrice(Option* option)
     double mu = option->mu;
     double sig = option->sig;
     double T = option->T;
-    double Z = 0.5;
+	double K = option->K;
     OptionType type = option->type;
     double z0 = (log(K/S0) - (mu - sig*sig/2.0)*T)/(sig*sqrt(T));
     if(type == CALL){
@@ -67,26 +67,67 @@ double optionPrice(Option* option)
 /* Probability density function (PDF) of variable X.
    X is the reimbursement in case of a  claim from the client.
 */
-double clientPDF_X(InsuredClient* client, double x)
-{
-    if (x <= 0.0) {
+double clientPDF_X(InsuredClient* client, double x){
+    if (client == NULL || x <= 0.0) {
         return 0.0;
     }
     double m = client->m;
     double s = client->s;
     double res = (log(x) - m) / s;
-    return (1.0 / (s * x)) * PHI(res);
+    return (1.0 / (s * x)) * phi(res);
 }
 
 
 /* Cumulative distribution function (CDF) of variable X.
    X is the reimbursement in case of a claim from the client.
 */
-double clientCDF_X(InsuredClient* client, double x)
-{
-  return 0.0;
+double clientCDF_X(InsuredClient* client, double x){
+	if(client == NULL || x == NULL){
+		return 0.0;
+	}
+	return PHI((log(x)-client->m)/option->s);
 }
 
+/* ==========================================================*/
+/* Distribution of X1+X2 : static intermediate functions     */
+
+/* The static functions localProductPDF and localPDF_X1X2 take only one
+   argument, of type double.
+   They hence can be integrated: function integrate_dx takes as argument a function pointer f, 
+   where f depends only on one argument (double t).
+   The static functions below can be given as argument to integrate_dx.
+
+   That's why we copy other variables of the final functions (client and x) to local static variables, 
+   and define these static functions depending on only one argument (double t).
+   These local functions can hence be arguments of integrate_dx.
+*/
+static InsuredClient* localClient;
+static double localX;
+
+
+/* This function assumes that static variables localClient and localX have been set.
+   It can be an argument of integrate_dx (since it has the good signature)
+*/
+static double localProductPDF(double t)
+{
+  return clientPDF_X(localClient, localX - t) * clientPDF_X(localClient, t);
+}
+
+/* Density of X1+X2
+
+   This function assumes that static variable localClient has been set.
+   It is called by clientPDF_X1X2
+   It can also be an argument of integrate_dx (since it has the good signature)
+*/
+static double localPDF_X1X2(double x)
+{
+  localX = x;
+  return integrate_dx(*localProductPDF,0,x,pfa_dt,pfaQF);
+} 
+
+
+/* ==========================================================*/
+/* Distribution of X1+X2 : the final functions               */
 
 /* Probability density function (PDF) of variable X1+X2.
    X1 and X2 are the reimbursements of the two claims from the client (assuming there are 
@@ -94,7 +135,10 @@ double clientCDF_X(InsuredClient* client, double x)
 */
 double clientPDF_X1X2(InsuredClient* client, double x)
 {
-  return 0.0;
+  if ( x<=0 ) return 0.0;
+
+  localClient = client;
+  return localPDF_X1X2(x);
 }
 
 
@@ -104,7 +148,8 @@ double clientPDF_X1X2(InsuredClient* client, double x)
 */
 double clientCDF_X1X2(InsuredClient* client, double x)
 {
-  return 0.0;
+  localClient = client;
+  return integrate_dx(*clientPDF_X1X2,0,x,pfa_dt,pfaQF);
 }
 
 
@@ -112,11 +157,10 @@ double clientCDF_X1X2(InsuredClient* client, double x)
 /* Cumulative distribution function (CDF) of variable S.
    Variable S is the sum of the reimbursements that the insurance company will pay to client.
 */
-double clientCDF_S(InsuredClient* client, double x)
-{
-  return 0.0;
+double clientCDF_S(InsuredClient* client, double x){
+	if(x < 0 || client == NULL || client->p) return 0.0;
+	if(x == 0) return client->p[0];	
+	double* p = client->p;	
+    return p[0]+p[1]*clientCDF_X(client,x)+p[2]*clientCDF_X1X2(client,x);
 }
-
-
-
 

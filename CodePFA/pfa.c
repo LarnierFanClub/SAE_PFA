@@ -82,10 +82,10 @@ double clientPDF_X(InsuredClient* client, double x){
    X is the reimbursement in case of a claim from the client.
 */
 double clientCDF_X(InsuredClient* client, double x){
-	if(client == NULL || x == NULL){
+	if(client == NULL || x == 0.0){
 		return 0.0;
 	}
-	return PHI((log(x)-client->m)/option->s);
+	return PHI((log(x)-client->m)/client->s);
 }
 
 /* ==========================================================*/
@@ -122,7 +122,7 @@ static double localProductPDF(double t)
 static double localPDF_X1X2(double x)
 {
   localX = x;
-  return integrate_dx(*localProductPDF,0,x,pfa_dt,pfaQF);
+  return integrate_dx(*localProductPDF,0,x,pfa_dt,&pfaQF);
 } 
 
 
@@ -148,8 +148,7 @@ double clientPDF_X1X2(InsuredClient* client, double x)
 double clientCDF_X1X2(InsuredClient* client, double x)
 {
     localClient = client;
-    
-    return integrate_dx(*clientPDF_X1X2(client),0,x,pfa_dt,&pfaQF);
+    return localPDF_X1X2(x);
 }
 
 

@@ -135,8 +135,7 @@ static double localPDF_X1X2(double x)
 */
 double clientPDF_X1X2(InsuredClient* client, double x)
 {
-  if ( x<=0 ) return 0.0;
-
+  if (x<=0) return 0.0;
   localClient = client;
   return localPDF_X1X2(x);
 }
@@ -148,8 +147,9 @@ double clientPDF_X1X2(InsuredClient* client, double x)
 */
 double clientCDF_X1X2(InsuredClient* client, double x)
 {
-  localClient = client;
-  return integrate_dx(*clientPDF_X1X2,0,x,pfa_dt,pfaQF);
+    localClient = client;
+    
+    return integrate_dx(*clientPDF_X1X2(client),0,x,pfa_dt,&pfaQF);
 }
 
 

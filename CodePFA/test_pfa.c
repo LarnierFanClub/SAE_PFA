@@ -9,8 +9,10 @@
 int main()
 {
 	if(!init_integration("gauss3",0.08)){
-		printf("a error occured while initialised variable")
+		printf("a error occured while initialised variable");
 	}
+    Option option = {CALL,100,99,2,0.05,0.02};
+    printf("%f\n",optionPrice(&option));    
     
     return 0;
 }

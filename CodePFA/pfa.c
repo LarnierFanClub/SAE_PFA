@@ -135,7 +135,7 @@ static double localPDF_X1X2(double x)
 */
 double clientPDF_X1X2(InsuredClient* client, double x)
 {
-  if (x<=0) return 0.0;
+  if (client == NULL || x<=0) return 0.0;
   localClient = client;
   return localPDF_X1X2(x);
 }
@@ -147,6 +147,7 @@ double clientPDF_X1X2(InsuredClient* client, double x)
 */
 double clientCDF_X1X2(InsuredClient* client, double x)
 {
+    if(client == NULL || x<=0) return 0.0;
     localClient = client;
     return localPDF_X1X2(x);
 }
